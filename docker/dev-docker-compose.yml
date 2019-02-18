@@ -3,8 +3,7 @@ services:
   api:
     image: 127.0.0.1:5000/buutti-api
     networks:
-      - frontend
-      - backend
+      - net
     volumes:
       - ${BUUTTI:-..}/:/home/node/app/
     #      - /home/node/app/node_modules/
@@ -18,7 +17,7 @@ services:
   redis:
     image: redis:5-alpine
     networks:
-      - backend
+      - net
     volumes:
       - redis-data:/data
     command: redis-server
@@ -27,6 +26,4 @@ volumes:
   redis-data:
 
 networks:
-  frontend:
-  backend:
-    internal: true
+  net:

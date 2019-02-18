@@ -8,7 +8,7 @@ docker swarm init 2>/dev/null
 if [ -z "$(docker service ls | grep registry)" ]
 then
   echo Starting local docker registry: ${REGISTRY}
-  docker service create --name registry --publish published=${PORT},target=5000 registry:2
+  docker service create --name registry --mount type=volume,source=registry,destination=/var/lib/registry --publish published=${PORT},target=5000 registry:2
 fi
 
 docker build -f ${BUUTTI:-.}/docker/Dockerfile -t ${REGISTRY}/buutti-api .

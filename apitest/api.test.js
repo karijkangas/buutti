@@ -75,6 +75,37 @@ describe('Test /string', () => {
     }
   });
 
+  test.skip('String length should be between min and max', async () => {
+    /* NOTE: length is random between MIN and MAX; so this test
+       may potentially fail as there is always a possibility that some
+       string length between MIN and MAX is not create; hence skip by
+       default  */
+    jest.setTimeout(60 * 1000);
+    const MIN_LENGTH = 8;
+    const MAX_LENGTH = 32;
+    const MAX_ITERATIONS = (MAX_LENGTH - MIN_LENGTH) * 10;
+
+    const stringLengths = new Set();
+    for (let i = 0; i < MAX_ITERATIONS; i += 1) {
+      const r = await req
+        .get('/string')
+        .set('Accept', 'application/json')
+        .expect(200);
+
+      const s = r.body.data;
+      expect(typeof s).toBe('string');
+      const l = s.length;
+      expect(l).toBeGreaterThanOrEqual(MIN_LENGTH);
+      expect(l).toBeLessThanOrEqual(MAX_LENGTH);
+      stringLengths.add(s.length);
+    }
+    expect([...stringLengths].sort()).toEqual(
+      [...Array(MAX_LENGTH - MIN_LENGTH + 1).keys()]
+        .map(i => i + MIN_LENGTH)
+        .sort()
+    );
+  });
+
   test('It should respond OK to correct POST', async () => {
     let r = await req
       .get('/string')

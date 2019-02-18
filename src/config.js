@@ -1,6 +1,7 @@
 /*
  *
  */
+require('dotenv').config();
 
 function envInt(v) {
   return parseInt(process.env[v], 10);
