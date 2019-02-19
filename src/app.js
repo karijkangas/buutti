@@ -8,7 +8,7 @@ const { router, sendError } = require('./api');
 const store = require('./store');
 const logger = require('./logger');
 
-const { info } = logger;
+const { info, error } = require('./logger');
 
 async function initialize() {
   info('app.initialize');
@@ -22,9 +22,17 @@ async function initialize() {
   app.use(logger.express);
   app.use(router);
 
+  /* handle missing routes */
+  // eslint-disable-next-line no-unused-vars
+  app.use((req, res, next) => {
+    sendError(res, 404, 'Not Found');
+  });
+
   /* handle unexpected errors */
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
+    /* log error details; do not leak error details to outside */
+    error(`Server error: ${err}`);
     sendError(res, 500, 'Internal Server Error');
   });
 

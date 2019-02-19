@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.0.3 - 2019-02-19
+### Removed
+- Remove spurious src/__tests__/api.test.js
+### Fixed
+- Missing routes (404) send proper json data
+- Require config first when server starts to enable dotenv ASAP
+
 ## 0.0.2 - 2019-02-18
 ### Added
 - Documentation to README.md
@@ -10,10 +17,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Github repository to package.json
 ### Changed
 - fine-tuning dev docker environment
-### Deprecated
-### Removed
-### Fixed
-### Security
 
 ## 0.0.1 - 2019-02-18
 ### Added

@@ -1,17 +1,17 @@
 /*
  *
  */
+const { API_PORT } = require('./config'); /* first to enable dotenv ASAP */
 
-const { initialize, shutdown } = require('./app');
-const { API_PORT } = require('./config');
+const app = require('./app');
 const { info } = require('./logger');
 
 let httpServer; // eslint-disable-line no-unused-vars
 
 process.on('SIGTERM', async () => {
   try {
-    await shutdown();
-    /* do not bother closing the httpServer */
+    await app.shutdown();
+    /* do not bother closing the httpServer; process.exit does this also */
   } catch (e) {
     /* ignore */
   }
@@ -19,11 +19,11 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-/* assume service is simply restarted if it fails to start */
 (async () => {
   info('starting server');
-  const app = await initialize(); /* ignore error */
-  httpServer = app.listen(API_PORT, () => {
+
+  /* ignore error; assume service is simply restarted if it fails to start */
+  httpServer = (await app.initialize()).listen(API_PORT, () => {
     info(`server started, listening port ${API_PORT}`);
   });
 })();

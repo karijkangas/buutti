@@ -279,19 +279,41 @@ describe('Test service', () => {
   const req = request(address);
 
   test('It should report 404 for unexpected GET', async () => {
-    await req.get('/').expect(404);
-    await req.get('/foobar').expect(404);
+    let r = await req.get('/').expect(404);
+
+    expect(r.body.error).toEqual({
+      code: 404,
+      detail: 'Not Found',
+    });
+
+    r = await req.get('/foobar').expect(404);
+
+    expect(r.body.error).toEqual({
+      code: 404,
+      detail: 'Not Found',
+    });
   });
 
   test('It should report 404 for unexpected POST', async () => {
-    await req
-      .post('/')
-      .set('Accept', 'application/json')
-      .expect(404);
-    await req
+    let r = await req
       .post('/foobar')
       .set('Accept', 'application/json')
       .expect(404);
+
+    expect(r.body.error).toEqual({
+      code: 404,
+      detail: 'Not Found',
+    });
+
+    r = await req
+      .post('/foobar')
+      .set('Accept', 'application/json')
+      .expect(404);
+
+    expect(r.body.error).toEqual({
+      code: 404,
+      detail: 'Not Found',
+    });
   });
 
   test.skip('It should return 500 to internal server error', async () => {
@@ -303,8 +325,7 @@ describe('Test service', () => {
       .expect('Content-Type', /json/)
       .expect(500);
 
-    expect(r.body.error).toHaveLength(1);
-    expect(r.body.error[0]).toEqual({
+    expect(r.body.error).toEqual({
       code: 500,
       detail: 'Internal Server Error',
     });

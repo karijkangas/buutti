@@ -1,6 +1,6 @@
 {
   "name": "buutti",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Buutti assignment",
   "main": "src/server.js",
   "scripts": {

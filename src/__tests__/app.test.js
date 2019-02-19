@@ -11,6 +11,7 @@ let request;
 let store;
 let engine;
 let app;
+let logger;
 
 describe('app.js', () => {
   beforeEach(() => {
@@ -20,6 +21,7 @@ describe('app.js', () => {
     request = require('supertest');
     store = require('../store');
     engine = require('../engine');
+    logger = require('../logger');
 
     app = require('../app');
   });
@@ -136,6 +138,18 @@ describe('app.js', () => {
     expect(r.body).toEqual({ data: 'NOK' });
   });
 
+  test('app /foobar GET 404 ok', async () => {
+    const a = await app.initialize();
+
+    const r = await request(a)
+      .get('/foobar')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(404);
+
+    expect(r.body).toEqual({ error: { code: 404, detail: 'Not Found' } });
+  });
+
   test('app /string POST failure', async () => {
     const token = 'test-token';
     const password = 'test-password';
@@ -155,5 +169,6 @@ describe('app.js', () => {
     expect(r.body).toEqual({
       error: { code: 500, detail: 'Internal Server Error' },
     });
+    expect(logger.error).toBeCalled();
   });
 });
